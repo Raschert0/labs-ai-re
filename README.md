@@ -40,9 +40,9 @@ minikube start --driver docker \
   --container-runtime docker \
   --gpus amd \
   --addons metrics-server,dashboard \
-  --cpus 2 \
-  --memory 8g \
-  --disk-size 10g \
+  --cpus 6 \
+  --memory max \
+  --disk-size 20g \
   -n 2 \
   --network-plugin=cni \
   --cni=false \
@@ -99,7 +99,7 @@ helm upgrade -i agentgateway oci://cr.agentgateway.dev/charts/agentgateway \
 Provision agentgateway proxy
 
 ```bash
-kubectl apply -f manifests/agentgateway/01-simple-gateway.yml
+kubectl apply -f agentgateway/manifests/01-simple-gateway.yml
 ```
 
 Then, once the external IP is "provisioned" for the proxy, capture it for later use
@@ -116,7 +116,7 @@ Create ollama deployment with underlying PVC for storing downloaded models.
 kubectl apply -f ollama/manifests/01-deployment.yml
 ```
 
-Then, once the external IP is "provisioned" for the service, tell ollama CLI where to connect.
+Then, once the external IP is "provisioned" for the service and pod is running, tell ollama CLI where to connect.
 
 ```bash
 export OLLAMA_HOST=$(kubectl get svc -n ollama ollama -o jsonpath="{.status.loadBalancer.ingress[0].ip}:{.spec.ports[0].nodePort}")
@@ -125,7 +125,7 @@ export OLLAMA_HOST=$(kubectl get svc -n ollama ollama -o jsonpath="{.status.load
 Pull the model specified in the manifest.
 
 ```bash
-ollama pull gemma4:e4b
+ollama pull granite4.1:8b-q4_K_M
 ```
 
 ### Configure Ollama as backend for agentgateway
@@ -134,4 +134,36 @@ Create necessary binding and specify which ollama model should be user
 
 ```bash
 kubectl apply -f agentgateway/manifests/02-ollama.yml
+```
+
+Verify that everything works as expected at this point
+
+```bash
+curl $INGRESS_GW_ADDRESS/v1/chat/completions -H "content-type: application/json" -d '{
+    "model": "granite4.1:8b-q4_K_M",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Explain the benefits of running models locally."
+      }
+    ]
+  }' | jq .
+```
+
+### Kagent setup
+
+Install CRDs
+
+```bash
+helm install kagent-crds oci://ghcr.io/kagent-dev/kagent/helm/kagent-crds \
+    --namespace kagent \
+    --create-namespace
+```
+
+Install chart
+
+```bash
+helm install kagent oci://ghcr.io/kagent-dev/kagent/helm/kagent \
+    --namespace kagent \
+    -f kagent/values.yaml
 ```

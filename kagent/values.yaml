@@ -1,0 +1,8 @@
+providers:
+  default: ollama
+  ollama:
+    config:
+      host: ollama.ollama.svc.cluster.local:11434
+      options:
+        num_ctx: "32000"
+    model: granite4.1:8b-q4_K_M

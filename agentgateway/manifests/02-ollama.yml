@@ -7,7 +7,7 @@ spec:
   ai:
     provider:
       openai:
-        model: gemma4:e4b
+        model: granite4.1:8b-q4_K_M
       host: ollama.ollama.svc.cluster.local
       port: 11434
 ---

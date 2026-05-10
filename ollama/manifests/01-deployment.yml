@@ -11,7 +11,7 @@ metadata:
     service: ollama
 spec:
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   capacity:
     storage: 30Gi
   persistentVolumeReclaimPolicy: Delete
@@ -29,7 +29,7 @@ spec:
       service: "ollama"
   storageClassName: ""
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   resources:
     requests:
       storage: 30Gi
@@ -62,10 +62,10 @@ spec:
         resources:
           requests:
             memory: 4Gi
-            cpu: 1
+            cpu: 4
           limits:
-            memory: 6Gi
-            cpu: 2
+            memory: 12Gi
+            cpu: 6
             amd.com/gpu: 1 # requesting a GPU
         readinessProbe:
           httpGet:
