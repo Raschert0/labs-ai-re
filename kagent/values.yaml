@@ -1,8 +1,15 @@
+agents:
+  argo-rollouts-agent:
+    enabled: false
+  istio-agent:
+    enabled: false
+  promql-agent:
+    enabled: false
 providers:
   default: ollama
   ollama:
     config:
-      host: ollama.ollama.svc.cluster.local:11434
+      host: agentgateway-proxy.agentgateway-system.svc.cluster.local
       options:
         num_ctx: "32000"
     model: granite4.1:8b-q4_K_M

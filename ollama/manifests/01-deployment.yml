@@ -11,7 +11,7 @@ metadata:
     service: ollama
 spec:
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce
   capacity:
     storage: 30Gi
   persistentVolumeReclaimPolicy: Delete
@@ -29,7 +29,7 @@ spec:
       service: "ollama"
   storageClassName: ""
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce
   resources:
     requests:
       storage: 30Gi

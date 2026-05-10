@@ -26,3 +26,18 @@ spec:
       namespace: agentgateway-system
       group: agentgateway.dev
       kind: AgentgatewayBackend
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /ollama
+    filters:
+    - type: URLRewrite
+      urlRewrite:
+        path:
+          type: ReplacePrefixMatch
+          replacePrefixMatch: "/"
+    backendRefs:
+    - name: ollama
+      namespace: agentgateway-system
+      group: agentgateway.dev
+      kind: AgentgatewayBackend

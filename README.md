@@ -9,7 +9,7 @@
 
 ### Software
 
-> I'm using minikube to to run this workload on my desktop.
+> I'm using minikube to run this workload on my desktop.
 > It supports hardware acceleration using [amd-gpu-device-plugin](https://minikube.sigs.k8s.io/docs/tutorials/amd/) addon
 
 * Docker
@@ -29,7 +29,7 @@
 
 ### Considerations
 
-CIDR `192.168.80.0/18` was chosen for this exercise, and so it was hardcoded in `networking.sh` and its subnets were used by Cilium and Minikube to define CIDRS for nodes and services respectively.
+CIDR `192.168.64.0/18` was chosen for this exercise, and so it was hardcoded in `networking.sh` and its subnets were used by Cilium and Minikube to define CIDRS for nodes and services respectively.
 
 ### Starting minikube
 
@@ -49,7 +49,7 @@ minikube start --driver docker \
   --service-cluster-ip-range '192.168.80.0/20'
 ```
 
-Add route to k8s CIDR
+Add route to k8s CIDR.
 
 ```bash
 ./networking.sh
@@ -57,7 +57,7 @@ Add route to k8s CIDR
 
 ### Cilium setup
 
-Install cilium and wait untill it finishes startup
+Install cilium and wait until it finishes startup.
 
 ```bash
 helm install cilium oci://quay.io/cilium/charts/cilium \
@@ -96,16 +96,17 @@ helm upgrade -i agentgateway oci://cr.agentgateway.dev/charts/agentgateway \
   --wait
 ```
 
-Provision agentgateway proxy
+Provision agentgateway proxy.
 
 ```bash
 kubectl apply -f agentgateway/manifests/01-simple-gateway.yml
 ```
 
-Then, once the external IP is "provisioned" for the proxy, capture it for later use
+Then, once the external IP is "provisioned" for the proxy, capture it for later use.
 
 ```bash
-export INGRESS_GW_ADDRESS=$(kubectl get svc -n agentgateway-system agentgateway-proxy -o jsonpath="{.status.loadBalancer.ingress[0].ip}:{.spec.ports[0].nodePort}")
+export INGRESS_GW_ADDRESS=$(kubectl get svc -n agentgateway-system agentgateway-proxy \
+    -o jsonpath="{.status.loadBalancer.ingress[0].ip}:{.spec.ports[0].port}")
 ```
 
 ### Ollama setup
@@ -119,7 +120,8 @@ kubectl apply -f ollama/manifests/01-deployment.yml
 Then, once the external IP is "provisioned" for the service and pod is running, tell ollama CLI where to connect.
 
 ```bash
-export OLLAMA_HOST=$(kubectl get svc -n ollama ollama -o jsonpath="{.status.loadBalancer.ingress[0].ip}:{.spec.ports[0].nodePort}")
+export OLLAMA_HOST=$(kubectl get svc -n ollama ollama \
+    -o jsonpath="{.status.loadBalancer.ingress[0].ip}:{.spec.ports[0].port}")
 ```
 
 Pull the model specified in the manifest.
@@ -130,16 +132,16 @@ ollama pull granite4.1:8b-q4_K_M
 
 ### Configure Ollama as backend for agentgateway
 
-Create necessary binding and specify which ollama model should be user
+Create necessary binding and specify which ollama model should be used.
 
 ```bash
 kubectl apply -f agentgateway/manifests/02-ollama.yml
 ```
 
-Verify that everything works as expected at this point
+Verify that everything works as expected at this point.
 
 ```bash
-curl $INGRESS_GW_ADDRESS/v1/chat/completions -H "content-type: application/json" -d '{
+curl $INGRESS_GW_ADDRESS/ollama/v1/chat/completions -H "content-type: application/json" -d '{
     "model": "granite4.1:8b-q4_K_M",
     "messages": [
       {
@@ -152,7 +154,7 @@ curl $INGRESS_GW_ADDRESS/v1/chat/completions -H "content-type: application/json"
 
 ### Kagent setup
 
-Install CRDs
+Install CRDs.
 
 ```bash
 helm install kagent-crds oci://ghcr.io/kagent-dev/kagent/helm/kagent-crds \
@@ -160,10 +162,17 @@ helm install kagent-crds oci://ghcr.io/kagent-dev/kagent/helm/kagent-crds \
     --create-namespace
 ```
 
-Install chart
+Install chart.
+> Chart creates a default ModelConfig for use by agents. It is defined as `ollama` provider, with `config.host` set to agentgateway-proxy address.
 
 ```bash
 helm install kagent oci://ghcr.io/kagent-dev/kagent/helm/kagent \
     --namespace kagent \
     -f kagent/values.yaml
 ```
+
+Then the kagent-ui should be accessible via ClusterIP of that service and port 8080.
+
+## Reports
+
+Directory `reports` contains whatever I deem necessary to prove my completion of the tasks for the given lab.
