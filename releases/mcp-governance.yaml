@@ -28,6 +28,16 @@ spec:
         namespace: flux-system
   values:
     createNamespace: true
+    controller:
+      image:
+        repository: ghcr.io/techwithhuz/mcp-governance-controller
+        tag: v0.22.2
+        pullPolicy: IfNotPresent
+    dashboard:
+      image:
+        repository: ghcr.io/techwithhuz/mcp-governance-dashboard
+        tag: v0.22.2
+        pullPolicy: IfNotPresent
     governancePolicy:
       spec:
         aiAgent:
