@@ -11,3 +11,4 @@ resources:
   - mcp-governance.yaml
   - a2a-agent.yaml
   - debug.yaml
+  - qdrant.yaml
