@@ -7,4 +7,5 @@ resources:
   - kagent-model.yaml
   - kagent-k8s-inspector.yaml
   - agentgateway-kagent-mcp.yaml
+  - a2a-agent.yaml
   - debug.yaml

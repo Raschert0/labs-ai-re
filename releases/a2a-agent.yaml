@@ -1,0 +1,82 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: a2a-agent
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-infra-advisor
+  namespace: a2a-agent
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ai-infra-advisor
+  template:
+    metadata:
+      labels:
+        app: ai-infra-advisor
+    spec:
+      containers:
+        - name: agent
+          image: ghcr.io/raschert0/ai-infra-advisor:latest
+          ports:
+            - containerPort: 8000
+          env:
+            - name: OPENAI_API_BASE
+              value: "http://agentgateway-external.agentgateway-system.svc.cluster.local/gemini"
+            - name: OPENAI_API_KEY
+              value: "placeholder"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ai-infra-advisor
+  namespace: a2a-agent
+spec:
+  selector:
+    app: ai-infra-advisor
+  ports:
+    - port: 8000
+      targetPort: 8000
+---
+# Allows the HTTPRoute in agentgateway-system to reference this Service
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: ReferenceGrant
+metadata:
+  name: allow-agentgateway
+  namespace: a2a-agent
+spec:
+  from:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      namespace: agentgateway-system
+  to:
+    - group: ""
+      kind: Service
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: ai-infra-advisor
+  namespace: agentgateway-system
+spec:
+  parentRefs:
+    - name: agentgateway-external
+      namespace: agentgateway-system
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /ai-infra-advisor
+      filters:
+        - type: URLRewrite
+          urlRewrite:
+            path:
+              type: ReplacePrefixMatch
+              replacePrefixMatch: /
+      backendRefs:
+        - name: ai-infra-advisor
+          namespace: a2a-agent
+          port: 8000
