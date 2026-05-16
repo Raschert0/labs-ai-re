@@ -31,3 +31,17 @@ spec:
     httpApi:
       serviceType: ClusterIP
     disableAuth: true
+---
+apiVersion: agentregistry.dev/v1alpha1
+kind: DiscoveryConfig
+metadata:
+  name: local-cluster
+  namespace: agentregistry
+spec:
+  environments:
+    - name: local
+      cluster:
+        name: local
+      namespaces:
+        - kagent
+      discoveryEnabled: true
