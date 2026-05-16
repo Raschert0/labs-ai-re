@@ -1,10 +1,21 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: kagent-gemini-placeholder
+  namespace: kagent
+type: Opaque
+stringData:
+  GOOGLE_API_KEY: PLACEHOLDER
+---
 apiVersion: kagent.dev/v1alpha2
 kind: ModelConfig
 metadata:
   name: gemini
   namespace: kagent
 spec:
+  apiKeySecret: kagent-gemini-placeholder
+  apiKeySecretKey: GOOGLE_API_KEY
   model: gemini-3.1-flash-lite
-  provider: Ollama
-  ollama:
-    host: agentgateway-external.agentgateway-system.svc.cluster.local
+  provider: OpenAI
+  openAI:
+    baseUrl: agentgateway-external.agentgateway-system.svc.cluster.local/gemini

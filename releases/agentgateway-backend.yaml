@@ -26,7 +26,13 @@ spec:
   - matches:
     - path:
         type: PathPrefix
-        value: /v1/chat/completions
+        value: /gemini
+    filters:
+    - type: URLRewrite
+      urlRewrite:
+        path:
+          type: ReplacePrefixMatch
+          replacePrefixMatch: "/"
     backendRefs:
     - name: google
       namespace: agentgateway-system
