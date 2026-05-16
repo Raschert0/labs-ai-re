@@ -31,24 +31,19 @@ jobs:
       - name: Push OCI artifact
         id: push
         run: |
-          set -x
           TAG=${GITHUB_REF_NAME#v}
-          echo "TAG=${TAG}"
-          echo "Repository: ${{ github.repository }}"
-          echo "Artifact URL: oci://ghcr.io/${{ github.repository }}/releases:${TAG}"
-          echo "--- releases/ directory contents ---"
-          find ./releases -type f | sort
-          echo "--- flux push artifact ---"
-          flux push artifact oci://ghcr.io/${{ github.repository }}/releases:${TAG} \
+          REPO=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+          digest=$(flux push artifact oci://ghcr.io/${REPO}/releases:${TAG} \
             --path="./releases" \
             --source="${{ github.repositoryUrl }}" \
             --revision="${{ github.ref_name }}@sha1:${{ github.sha }}" \
-            --verbose
+            --output json | jq -r '.digest')
           echo "tag=${TAG}" >> $GITHUB_OUTPUT
+          echo "repo=${REPO}" >> $GITHUB_OUTPUT
+          echo "digest=${digest}" >> $GITHUB_OUTPUT
 
-      # Tag step disabled during push debugging
-      # - name: Tag artifact as latest
-      #   run: |
-      #     flux tag artifact \
-      #       oci://ghcr.io/${{ github.repository }}/releases:${{ steps.push.outputs.tag }} \
-      #       --tag latest
+      - name: Tag artifact as latest
+        run: |
+          flux tag artifact \
+            oci://ghcr.io/${{ steps.push.outputs.repo }}/releases:${{ steps.push.outputs.tag }}@${{ steps.push.outputs.digest }} \
+            --tag latest
