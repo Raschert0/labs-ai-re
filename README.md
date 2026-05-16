@@ -6,6 +6,10 @@
 * [Lab 02](https://github.com/Raschert0/labs-ai-re/tree/lab/02)
 * [Lab 04](https://github.com/Raschert0/labs-ai-re/tree/lab/04)
 
+## Reports
+
+Directory `reports` contains whatever I deem necessary to prove my completion of the tasks for the given lab.
+
 ## Repository structure
 
 ```
@@ -128,7 +132,3 @@ Then open the printed URL in your browser and configure:
 - **Inspector Proxy Address**: `https://<codespace-name>-6277.app.github.dev`
 
 Make sure port `6277` (proxy) is set to **Public** visibility in the Codespace Ports panel.
-
-## Reports
-
-Directory `reports` contains whatever I deem necessary to prove my completion of the tasks for the given lab.
