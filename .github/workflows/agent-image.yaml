@@ -11,12 +11,14 @@ jobs:
   build-push:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       packages: write
 
     steps:
       - name: Checkout
         uses: actions/checkout@v6.0.2
+        with:
+          fetch-depth: 0
 
       - name: Login to GHCR
         uses: docker/login-action@v4.1.0
@@ -26,6 +28,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push
+        id: build
         uses: docker/build-push-action@v6
         with:
           context: ./agent
@@ -33,3 +36,25 @@ jobs:
           tags: |
             ghcr.io/raschert0/ai-infra-advisor:latest
             ghcr.io/raschert0/ai-infra-advisor:${{ github.sha }}
+
+      - name: Update image digest in manifest
+        run: |
+          DIGEST="${{ steps.build.outputs.digest }}"
+          sed -i "s|image: ghcr.io/raschert0/ai-infra-advisor.*|image: ghcr.io/raschert0/ai-infra-advisor@${DIGEST}|" releases/a2a-agent.yaml
+
+      - name: Commit, tag, and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add releases/a2a-agent.yaml
+          git commit -m "Update ai-infra-advisor image digest [skip ci]"
+
+          git fetch origin --tags --force
+          TAG=$(git tag --list 'v*' | sort -V | tail -1 | sed 's/^v//' || echo "0.0.0")
+          MAJOR=$(echo $TAG | cut -d. -f1)
+          MINOR=$(echo $TAG | cut -d. -f2)
+          PATCH=$(echo $TAG | cut -d. -f3)
+          NEW_TAG="v${MAJOR}.${MINOR}.$((PATCH+1))"
+
+          git tag "$NEW_TAG"
+          git push origin HEAD:refs/heads/main "$NEW_TAG"
