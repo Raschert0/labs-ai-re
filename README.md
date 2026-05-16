@@ -12,12 +12,15 @@
 .
 ├── abox/                         # Git submodule — forked infra-as-code tooling used to
 │                                 #   spin up the local k8s cluster (kind + Flux bootstrap)
+├── agent/                        # A2A agent source (ai-infra-advisor)
+│   ├── agent.py                  # Google ADK agent with 3 tools, wrapped with to_a2a()
+│   ├── Dockerfile                # Container image definition
+│   └── requirements.txt          # Python dependencies (google-adk, litellm, uvicorn)
 ├── agentgateway/
 │   └── manifests/                # Standalone agentgateway manifests (exploratory / lab reference)
 ├── fluxcd/
 │   ├── oci-repository.yaml       # Flux OCIRepository — pulls releases OCI image from GHCR
 │   └── kustomization.yaml        # Flux Kustomization — reconciles releases/ with SOPS decryption
-├── kagent/                       # kagent-related exploration / scratch files
 ├── notes/                        # Freeform lab notes and research
 ├── releases/                     # Primary manifests — packaged as OCI and reconciled by Flux
 │   ├── kustomization.yaml        # Kustomize entry point for everything in this directory
@@ -26,10 +29,15 @@
 │   ├── agentgateway-kagent-mcp.yaml            # AgentgatewayBackend exposing kagent MCP server
 │   ├── kagent-model.yaml                       # ModelConfig (Gemini via agentgateway)
 │   ├── kagent-k8s-inspector.yaml               # kagent Agent — read-only k8s cluster inspector
+│   ├── agentregistry.yaml                      # Agent registry + DiscoveryConfig (kagent namespace)
+│   ├── mcp-governance.yaml                     # MCP security governance (OCI Helm chart)
+│   ├── a2a-agent.yaml                          # ai-infra-advisor Deployment + Service + HTTPRoute
+│   ├── qdrant.yaml                             # Qdrant vector database (HelmRepository + HelmRelease)
 │   └── debug.yaml                              # Debug namespace + netshoot pod
 ├── reports/                      # Lab completion artefacts (screenshots, retrospectives)
 ├── .github/workflows/
-│   └── flux-push.yaml            # CI — packages releases/ as OCI and pushes to GHCR on merge
+│   ├── agent-image.yaml          # CI — builds agent image, pins digest in a2a-agent.yaml, bumps tag
+│   └── flux-push.yaml            # CI — packages releases/ as OCI and pushes to GHCR on tag
 ├── .sops.yaml                    # SOPS config — age key selection rules
 └── Makefile                      # Convenience targets (push tag, etc.)
 ```
