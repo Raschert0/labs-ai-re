@@ -1,0 +1,10 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: labs-ai-re
+  namespace: flux-system
+spec:
+  interval: 2m
+  url: oci://ghcr.io/raschert0/labs-ai-re/releases
+  ref:
+    tag: latest

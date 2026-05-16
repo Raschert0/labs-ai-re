@@ -1,0 +1,13 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: labs-ai-re
+  namespace: flux-system
+spec:
+  interval: 2m
+  sourceRef:
+    kind: OCIRepository
+    name: labs-ai-re
+  path: ./
+  prune: true
+  retryInterval: 30s
