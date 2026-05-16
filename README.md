@@ -4,6 +4,7 @@
 
 * [Lab 01](https://github.com/Raschert0/labs-ai-re/tree/lab/01)
 * [Lab 02](https://github.com/Raschert0/labs-ai-re/tree/lab/02)
+* [Lab 04](https://github.com/Raschert0/labs-ai-re/tree/lab/04)
 
 ## Requirements
 
