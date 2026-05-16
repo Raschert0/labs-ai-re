@@ -47,7 +47,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add releases/a2a-agent.yaml
-          git commit -m "Update ai-infra-advisor image digest [skip ci]"
+          git commit -m "Update ai-infra-advisor image digest"
 
           git fetch origin --tags --force
           TAG=$(git tag --list 'v*' | sort -V | tail -1 | sed 's/^v//' || echo "0.0.0")
