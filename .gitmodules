@@ -1,0 +1,3 @@
+[submodule "abox"]
+	path = abox
+	url = git@github.com:den-vasyliev/abox.git
