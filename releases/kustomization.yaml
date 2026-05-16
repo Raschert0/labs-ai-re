@@ -8,5 +8,6 @@ resources:
   - kagent-k8s-inspector.yaml
   - agentgateway-kagent-mcp.yaml
   - agentregistry.yaml
+  - mcp-governance.yaml
   - a2a-agent.yaml
   - debug.yaml
