@@ -11,3 +11,7 @@ spec:
   path: ./
   prune: true
   retryInterval: 30s
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-age

@@ -1,0 +1,10 @@
+apiVersion: kagent.dev/v1alpha2
+kind: ModelConfig
+metadata:
+  name: gemini
+  namespace: kagent
+spec:
+  model: gemini-3.1-flash-lite
+  provider: openAI
+  openAI:
+    baseUrl: agentgateway-external.agentgateway-system.svc.cluster.local
