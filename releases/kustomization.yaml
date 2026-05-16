@@ -5,3 +5,4 @@ resources:
   - agentgateway-backend-secrets.enc.yaml
   - agentgateway-backend.yaml
   - kagent-model.yaml
+  - debug.yaml
