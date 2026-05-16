@@ -6,6 +6,10 @@
 * [Lab 02](https://github.com/Raschert0/labs-ai-re/tree/lab/02)
 * [Lab 04](https://github.com/Raschert0/labs-ai-re/tree/lab/04)
 
+## Reports
+
+Directory `reports` contains whatever I deem necessary to prove my completion of the tasks for the given lab.
+
 ## Requirements
 
 ### Hardware
@@ -178,7 +182,3 @@ helm install kagent oci://ghcr.io/kagent-dev/kagent/helm/kagent \
 ```
 
 Then the kagent-ui should be accessible via ClusterIP of that service and port 8080.
-
-## Reports
-
-Directory `reports` contains whatever I deem necessary to prove my completion of the tasks for the given lab.
