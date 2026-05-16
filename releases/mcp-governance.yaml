@@ -19,15 +19,11 @@ spec:
   targetNamespace: mcp-governance
   install:
     createNamespace: true
-  chart:
-    spec:
-      chart: mcp-governance
-      sourceRef:
-        kind: OCIRepository
-        name: mcp-security-governance
-        namespace: flux-system
+  chartRef:
+    kind: OCIRepository
+    name: mcp-security-governance
+    namespace: flux-system
   values:
-    createNamespace: true
     controller:
       image:
         repository: ghcr.io/techwithhuz/mcp-governance-controller
