@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
         - name: agent
-          image: ghcr.io/raschert0/ai-infra-advisor:latest
+          image: ghcr.io/raschert0/ai-infra-advisor@sha256:1388df70b65013f8425e11a65974e603006eb5284b56f3f14c1fda457a0ced27
           ports:
             - containerPort: 8000
           env:
