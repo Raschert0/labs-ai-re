@@ -11,7 +11,7 @@ spec:
     Never mutates cluster resources.
   declarative:
     modelConfig: gemini
-    stream: true
+    stream: false
     systemMessage: |
       You are a Kubernetes cluster inspector with read-only access to cluster resources.
       Your purpose is to help users understand cluster state, diagnose issues, and
@@ -56,7 +56,7 @@ spec:
       - type: McpServer
         mcpServer:
           kind: RemoteMCPServer
-          name: kagent-tool-server
+          name: agentgateway-external.agentgateway-system.svc.cluster.local
           toolNames:
             - k8s_get_available_api_resources
             - k8s_get_cluster_configuration
