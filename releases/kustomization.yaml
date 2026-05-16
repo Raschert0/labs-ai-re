@@ -4,5 +4,6 @@ kind: Kustomization
 resources:
   - agentgateway-backend-secrets.enc.yaml
   - agentgateway-backend.yaml
+  - kagent.yaml
   - kagent-model.yaml
   - debug.yaml
