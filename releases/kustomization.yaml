@@ -6,3 +6,5 @@ resources:
   - agentgateway-backend.yaml
   - kagent-model.yaml
   - debug.yaml
+  - kagent-k8s-inspector.yaml
+  - agentgateway-kagent-mcp.yaml
