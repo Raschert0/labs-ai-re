@@ -85,7 +85,7 @@ def get_mcp_endpoints() -> dict:
 
 root_agent = Agent(
     model=LiteLlm(model="openai/gemini-3.1-flash-lite"),
-    name="ai-infra-advisor",
+    name="ai_infra_advisor",
     description=(
         "AI infrastructure advisor for the k8s lab cluster. "
         "Provides information about deployed AI components, agents, and MCP endpoints."
